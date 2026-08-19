@@ -1,0 +1,398 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DevForge Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#474646",
+                        "on-secondary-container": "#b7b4b4",
+                        "inverse-primary": "#436900",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-container": "#e5e2e1",
+                        "surface-container-low": "#1b1c1c",
+                        "surface-container-lowest": "#0d0e0f",
+                        "background": "#121414",
+                        "surface-container-highest": "#343535",
+                        "outline": "#8b947a",
+                        "on-surface-variant": "#c0caad",
+                        "outline-variant": "#414a34",
+                        "tertiary": "#ffffff",
+                        "inverse-surface": "#e3e2e2",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed": "#112000",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "primary-fixed-dim": "#90db00",
+                        "surface-container-high": "#292a2a",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "surface-bright": "#383939",
+                        "on-primary": "#203600",
+                        "on-primary-container": "#476f00",
+                        "surface-tint": "#90db00",
+                        "on-secondary": "#313030",
+                        "on-surface": "#e3e2e2",
+                        "on-error": "#690005",
+                        "primary": "#ffffff",
+                        "on-tertiary-container": "#656464",
+                        "secondary-fixed-dim": "#c9c6c5",
+                        "surface-variant": "#343535",
+                        "secondary": "#c9c6c5",
+                        "on-secondary-fixed-variant": "#474646",
+                        "surface": "#121414",
+                        "primary-container": "#a5fa00",
+                        "surface-container": "#1f2020",
+                        "tertiary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "inverse-on-surface": "#303031",
+                        "error-container": "#93000a",
+                        "on-primary-fixed-variant": "#314f00",
+                        "surface-dim": "#121414",
+                        "primary-fixed": "#a5fa00",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-tertiary": "#313030",
+                        "on-background": "#e3e2e2",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-mobile": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg": ["72px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&family=Geist:wght@400&display=swap');
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Utilities based on Design System */
+        .btn-primary {
+            @apply bg-primary-container text-surface-container-lowest font-headline-md font-bold px-6 py-3 rounded hover:bg-primary-fixed-dim transition-colors;
+        }
+        .btn-secondary {
+            @apply bg-transparent border border-surface-container-high text-primary font-headline-md px-6 py-3 rounded hover:border-primary transition-colors;
+        }
+        .card-level-1 {
+            @apply bg-background border border-surface-container-high rounded p-[32px] md:p-[24px];
+        }
+        .status-badge-active {
+            @apply border border-primary-container text-primary-container font-label-sm text-label-sm px-2 py-1 rounded flex items-center gap-2;
+        }
+        .status-badge-neutral {
+            @apply border border-outline text-outline font-label-sm text-label-sm px-2 py-1 rounded flex items-center gap-2;
+        }
+        .status-dot-active {
+            @apply w-1 h-1 rounded-full bg-primary-container;
+        }
+        .status-dot-neutral {
+            @apply w-1 h-1 rounded-full bg-outline;
+        }
+    </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;family=Geist:wght@400&amp;display=swap" data-snapdom="injected-import"></head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex selection:bg-primary-container selection:text-background">
+<!-- Mobile TopNav (Visible only on mobile md:hidden) -->
+<nav class="md:hidden fixed top-0 w-full z-50 bg-background dark:bg-background border-b border-outline-variant dark:border-outline-variant flex justify-between items-center px-margin-mobile h-20 shadow-none">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+             DevForge
+        </div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<!-- SideNavBar (Desktop md:flex) -->
+<nav class="hidden md:flex flex-col h-screen w-64 left-0 top-0 border-r border-outline-variant dark:border-outline-variant bg-surface-container dark:bg-surface-container py-8 fixed z-40">
+<!-- Brand Header -->
+<div class="px-8 mb-12">
+<div class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+                DevForge
+             </div>
+<!-- Project Context -->
+<div class="flex items-center gap-4 bg-background border border-surface-container-high p-4 rounded-lg">
+<img class="w-10 h-10 rounded bg-surface-container-high object-cover" data-alt="A minimal geometric isometric icon representing a software development workspace in a dark UI environment. High contrast neon accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj-qm5b0Xcq6_HZ3lNA68qn8HDDRXo9z4Rh5QeE0_ODXuD0q40YLLnPi_jjhwC3KjpZ3YKI4CICa5QqyxRxHV77npSR_0CtrtBUc_qmj9MiJGv2hfj0N-4MAtZqXrQimPHlGRPRaOmBhum9Uy0USVoXIbutcsRTYz3TshVH-QRRGassyq_RbqVYa2V_VyVj1_gZjVlv7ukum2jT8aIgxffBhi-mNDu5XSb0fjgHhOWv_vzsiIAtX7p">
+<div>
+<h3 class="font-headline-md text-headline-md text-sm text-primary">Project Workspace</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Active Sprint</p>
+</div>
+</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 px-4 space-y-2">
+<!-- Active Tab -->
+<a class="flex items-center gap-4 px-4 py-3 rounded bg-secondary-container dark:bg-secondary-container text-primary dark:text-primary border-r-2 border-primary group transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Overview</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined">view_kanban</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Kanban</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Team</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Chat</span>
+</a>
+</div>
+<!-- CTA Action -->
+<div class="px-8 my-8">
+<button class="w-full btn-primary flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Task
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="px-4 space-y-2 mt-auto">
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Help</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 pt-24 md:pt-0 pb-12 px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pt-12 md:pt-24 border-b border-surface-container-high pb-8">
+<div>
+<h1 class="font-display-lg text-display-lg text-primary tracking-tight">Overview</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl">Good morning. You have 3 active projects and 12 tasks requiring attention this week.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-3 border border-surface-container-high rounded text-on-surface-variant hover:text-primary hover:border-primary transition-colors group relative">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
+</button>
+<button class="p-3 border border-surface-container-high rounded text-on-surface-variant hover:text-primary hover:border-primary transition-colors group relative">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary-container"></span>
+</button>
+<button class="btn-primary flex items-center gap-2 ml-4">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    New Project
+                </button>
+</div>
+</header>
+<!-- Grid Layout for Dashboard Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Active Projects (Bento Grid Style) -->
+<section class="md:col-span-8 flex flex-col gap-6">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-headline-md text-headline-md text-primary">Active Projects</h2>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">VIEW ALL <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- Project Card 1 -->
+<article class="card-level-1 flex flex-col group hover:border-primary-container transition-colors relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-low to-background z-0"></div>
+<div class="relative z-10 flex flex-col h-full">
+<div class="flex justify-between items-start mb-8">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Platform Rewrite</span>
+<div class="status-badge-active">
+<span class="status-dot-active"></span>
+                                    IN PROGRESS
+                                </div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4 group-hover:text-primary-container transition-colors">Core API v2.0</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 flex-1">Refactoring legacy authentication endpoints to support OAuth2 and expanding rate limiting capabilities.</p>
+<div class="flex items-center justify-between border-t border-surface-container-high pt-4 mt-auto">
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-background object-cover" data-alt="A portrait of a software developer looking focused, minimalist lighting, dark theme background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJZkEqP8mDVzFh6SHBnvYB80E5wJgCTmJrgqoX2CMZc-aTlX8e02FD-0wXPYsArc5VUCGqquZTaT6GH24X1GptDsXNZERofjaLql5NFM4P2dTObnFP2az_653RDg0tN3XsBBWO5-9jwlV_aJfmvdtaP3RNNcjFN3Paawtv3TlyNHnjSXyevyg4YuitC9Z98welzplCt42kxzlSQ04g-Q3e0duM5RHRxsnDs39YCPbd4PGmAhCp9nad">
+<img class="w-8 h-8 rounded-full border-2 border-background object-cover" data-alt="A portrait of a UX designer, looking creative, minimalist lighting, dark theme background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwGOn8O-8_DAOP08loXQCNzlHgeokkiPXEGHyvGwHo25jUTC2mqWXexttAkUTp61AE_yBWdkK7VPByapxRE4sa5biikcfeOMUMi5htY5YsnGmth1Bk-7UWxQMpOJid7SOy2awpU1v-vTsN-ah-P0YRvNPgjSjY1oG22H46QLlPJffBTzoQucna3Zxwt8Co7i9mCT4zfKYCVuoPtFGNxY9FfYDyqmcgkB8-b0gzyh-YuO6McHvbMZB2">
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-container-high flex items-center justify-center font-label-sm text-[10px] text-primary">+2</div>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Due Oct 24</div>
+</div>
+</div>
+</article>
+<!-- Project Card 2 -->
+<article class="card-level-1 flex flex-col group hover:border-primary-container transition-colors relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-surface-container-low to-background z-0"></div>
+<div class="relative z-10 flex flex-col h-full">
+<div class="flex justify-between items-start mb-8">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Frontend</span>
+<div class="status-badge-active">
+<span class="status-dot-active"></span>
+                                    IN PROGRESS
+                                </div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4 group-hover:text-primary-container transition-colors">Design System UI</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 flex-1">Implementing new minimal-technic tokens across the shared component library and updating documentation.</p>
+<div class="flex items-center justify-between border-t border-surface-container-high pt-4 mt-auto">
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-background object-cover" data-alt="A portrait of a UI developer, minimalist lighting, dark theme background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAByRb4amSQVtR9snZ3UZQi3JaoaRE7NVcBMfKv6xxuxIvQh1NiQHW-T3EKGGipjCy6ZEYoiBODBtV3lLBTMGiDMwQsM29UJGQfVYwRcBxVsooHQtTytKs0JQROK-X7--vzsoPu5zwk2b4wiPs9I2RMbz_M7aBgXIm2yLYiKZk166vZZhvabOvBoIM03G_a0ZFCOPeZGDcZZBKvJETLwFXF2UWpXHvvV13SI1yV5d6IvANTTheWl7Tw">
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Due Oct 28</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- Sidebar Content -->
+<aside class="md:col-span-4 flex flex-col gap-6">
+<!-- Weekly Progress Chart -->
+<div class="card-level-1">
+<h2 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-6">Weekly Progress</h2>
+<div class="flex items-end gap-4 h-32 mb-4 border-b border-surface-container-high pb-4">
+<!-- Simulated Bar Chart -->
+<div class="w-full bg-surface-container-high rounded h-[40%] hover:bg-primary-container transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-background border border-surface-container-high px-2 py-1 rounded text-label-sm opacity-0 group-hover:opacity-100 transition-opacity">Mon</div>
+</div>
+<div class="w-full bg-surface-container-high rounded h-[70%] hover:bg-primary-container transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-background border border-surface-container-high px-2 py-1 rounded text-label-sm opacity-0 group-hover:opacity-100 transition-opacity">Tue</div>
+</div>
+<div class="w-full bg-primary-container rounded h-[90%] shadow-[0_0_15px_rgba(165,250,0,0.3)] cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-background border border-primary-container px-2 py-1 rounded text-label-sm text-primary-container opacity-100 transition-opacity z-10">Wed</div>
+</div>
+<div class="w-full bg-surface-container-high rounded h-[30%] hover:bg-primary-container transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-background border border-surface-container-high px-2 py-1 rounded text-label-sm opacity-0 group-hover:opacity-100 transition-opacity">Thu</div>
+</div>
+<div class="w-full bg-surface-container-high rounded h-[10%] hover:bg-primary-container transition-colors cursor-pointer relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-background border border-surface-container-high px-2 py-1 rounded text-label-sm opacity-0 group-hover:opacity-100 transition-opacity">Fri</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">24 Tasks</span>
+<span class="font-label-sm text-label-sm text-primary-container">+12% vs last week</span>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="card-level-1 flex-1">
+<h2 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-6">Recent Activity</h2>
+<div class="space-y-6 relative before:absolute before:inset-y-0 before:left-[15px] before:w-px before:bg-surface-container-high">
+<!-- Feed Item -->
+<div class="relative flex gap-4 pl-8 group cursor-pointer">
+<div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-background border border-surface-container-high flex items-center justify-center z-10 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary-container">commit</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">Merged PR #1042 into <span class="font-label-sm text-primary-container bg-surface-container px-1 py-0.5 rounded">main</span></p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">2 hours ago by Alex</p>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="relative flex gap-4 pl-8 group cursor-pointer">
+<div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-background border border-surface-container-high flex items-center justify-center z-10 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary-container">check_circle</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">Completed task "Update user schema"</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">4 hours ago by You</p>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="relative flex gap-4 pl-8 group cursor-pointer">
+<div class="absolute left-0 top-1 w-8 h-8 rounded-full bg-background border border-surface-container-high flex items-center justify-center z-10 group-hover:border-primary-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant group-hover:text-primary-container">bug_report</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary">New issue reported on Production</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Yesterday by System</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Assigned Tasks (List View) -->
+<section class="mt-16">
+<div class="flex items-center justify-between mb-8 border-b border-surface-container-high pb-4">
+<h2 class="font-headline-md text-headline-md text-primary">Assigned Tasks</h2>
+<div class="flex gap-4">
+<button class="font-label-sm text-label-sm text-primary border-b border-primary-container pb-1">All</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary pb-1 transition-colors">Pending</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary pb-1 transition-colors">Review</button>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Task Row 1 -->
+<div class="bg-surface-container-low hover:bg-surface-container border border-transparent hover:border-surface-container-high rounded p-4 flex items-center justify-between transition-colors group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-5 h-5 rounded border border-surface-container-high group-hover:border-primary-container flex items-center justify-center transition-colors"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase w-24">DEV-402</span>
+<span class="font-body-md text-body-md text-primary group-hover:text-primary-container transition-colors">Implement OAuth2 login flow</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="status-badge-active">
+<span class="status-dot-active"></span> IN PROGRESS
+                        </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant w-24 text-right">High Priority</span>
+</div>
+</div>
+<!-- Task Row 2 -->
+<div class="bg-surface-container-low hover:bg-surface-container border border-transparent hover:border-surface-container-high rounded p-4 flex items-center justify-between transition-colors group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-5 h-5 rounded border border-surface-container-high group-hover:border-primary-container flex items-center justify-center transition-colors"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase w-24">UI-118</span>
+<span class="font-body-md text-body-md text-primary group-hover:text-primary-container transition-colors">Update dashboard metrics layout</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="status-badge-neutral">
+<span class="status-dot-neutral"></span> PENDING
+                        </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant w-24 text-right">Med Priority</span>
+</div>
+</div>
+<!-- Task Row 3 -->
+<div class="bg-surface-container-low hover:bg-surface-container border border-transparent hover:border-surface-container-high rounded p-4 flex items-center justify-between transition-colors group cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-5 h-5 rounded border border-surface-container-high group-hover:border-primary-container flex items-center justify-center transition-colors"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase w-24">SYS-092</span>
+<span class="font-body-md text-body-md text-primary group-hover:text-primary-container transition-colors">Migrate database cluster to v14</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="status-badge-neutral">
+<span class="status-dot-neutral"></span> PENDING
+                        </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant w-24 text-right">Low Priority</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

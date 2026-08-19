@@ -1,0 +1,408 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DevForge - Kanban</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&amp;family=Hanken+Grotesk:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#b7b4b4",
+                      "inverse-primary": "#436900",
+                      "primary-container": "#a5fa00",
+                      "surface-container-highest": "#343535",
+                      "tertiary-fixed": "#e5e2e1",
+                      "tertiary-container": "#e5e2e1",
+                      "background": "#121414",
+                      "error-container": "#93000a",
+                      "surface-variant": "#343535",
+                      "on-tertiary-fixed": "#1c1b1b",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-primary": "#203600",
+                      "on-primary-fixed-variant": "#314f00",
+                      "surface": "#121414",
+                      "on-tertiary-container": "#656464",
+                      "on-tertiary": "#313030",
+                      "tertiary": "#ffffff",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "error": "#ffb4ab",
+                      "outline": "#8b947a",
+                      "surface-container": "#1f2020",
+                      "inverse-surface": "#e3e2e2",
+                      "inverse-on-surface": "#303031",
+                      "on-background": "#e3e2e2",
+                      "on-surface": "#e3e2e2",
+                      "surface-container-high": "#292a2a",
+                      "surface-tint": "#90db00",
+                      "on-secondary-fixed-variant": "#474646",
+                      "surface-bright": "#383939",
+                      "on-tertiary-fixed-variant": "#474746",
+                      "outline-variant": "#414a34",
+                      "surface-dim": "#121414",
+                      "on-error": "#690005",
+                      "on-primary-container": "#476f00",
+                      "on-error-container": "#ffdad6",
+                      "secondary": "#c9c6c5",
+                      "on-primary-fixed": "#112000",
+                      "on-secondary": "#313030",
+                      "primary": "#ffffff",
+                      "surface-container-low": "#1b1c1c",
+                      "primary-fixed": "#a5fa00",
+                      "on-surface-variant": "#c0caad",
+                      "secondary-container": "#474646",
+                      "primary-fixed-dim": "#90db00",
+                      "secondary-fixed-dim": "#c9c6c5",
+                      "tertiary-fixed-dim": "#c8c6c5",
+                      "surface-container-lowest": "#0d0e0f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "margin-desktop": "64px",
+                      "container-max": "1440px",
+                      "margin-mobile": "24px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #080808;
+            color: #e3e2e2;
+        }
+        
+        /* Minimalist Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121414; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #343535; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #414a34; 
+        }
+
+        /* Tonal Elevation Levels */
+        .elevation-0 { background-color: #080808; }
+        .elevation-1 { 
+            background-color: #121212; 
+            border: 1px solid #242424; 
+        }
+        
+        /* Active State / Signal */
+        .glow-accent {
+            border: 1px solid #A8FF00;
+            box-shadow: inset 0 0 10px rgba(168, 255, 0, 0.1);
+        }
+      </style>
+</head>
+<body class="flex h-screen overflow-hidden text-body-md font-body-md">
+<!-- TopNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-between items-center px-margin-mobile w-full h-16 bg-background dark:bg-background text-primary-fixed dark:text-primary-fixed font-body-md text-body-md border-b border-outline-variant fixed top-0 z-50">
+<div class="font-headline-md text-headline-md font-semibold text-primary dark:text-primary">DevForge</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</div>
+</nav>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-surface-container-low dark:bg-surface-container-low text-primary-fixed dark:text-primary-fixed font-label-sm text-label-sm border-r border-outline-variant py-8 px-4 flex-shrink-0 z-40">
+<!-- Header -->
+<div class="mb-12 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-[#121212] border border-[#242424] flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary-fixed">diamond</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-tight">DevForge</h1>
+<p class="text-[#8A8A8A] mt-1">v1.0.4</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all hover:bg-surface-container-highest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Overview
+            </a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-primary-fixed-variant bg-primary-container rounded-lg border border-primary-fixed transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="view_kanban" data-weight="fill" style="font-variation-settings: 'FILL' 1;">view_kanban</span>
+                Kanban
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all hover:bg-surface-container-highest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Team
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all hover:bg-surface-container-highest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+                Chat
+            </a>
+</nav>
+<!-- CTA -->
+<div class="mt-auto mb-6 px-2">
+<button class="w-full py-3 bg-[#A8FF00] text-[#080808] font-bold font-display-lg rounded hover:bg-[#b8ff33] transition-colors">
+                New Project
+            </button>
+</div>
+<!-- Footer Navigation -->
+<nav class="space-y-2 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all hover:bg-surface-container-highest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Docs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all hover:bg-surface-container-highest transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Help
+            </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full overflow-hidden mt-16 md:mt-0 pt-6 px-margin-mobile md:px-margin-desktop bg-[#080808]">
+<!-- Board Header -->
+<header class="flex justify-between items-end mb-8 flex-shrink-0">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Sprint 42</h2>
+<div class="flex items-center gap-4 mt-2">
+<span class="font-label-sm text-label-sm uppercase text-[#8A8A8A] border border-[#8A8A8A] px-2 py-1 rounded">Q3 Planning</span>
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-[#080808] object-cover" data-alt="A detailed headshot of a software developer with glasses, in a minimalist dark cyberpunk setting, dramatic green rim lighting, professional yet edgy portrait, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWYyY8uRBBT8U_8Q1f30a3n6qta0lqVob0BkCGkpXSNxDibu3OoqIanGDDA3SpEtGXOVZhBRQ28lDRlKoEUhvmBM2cXzZcdwMGTKWidAy9QrzMsg-Zz1ct87yGFvONo4eA6Ndyyi7wAA4tGGKfIQm742F56ubvy784UmOSW2OHAs4OC5-3vuuJLb7HnmCo69mKyYcIbPhSu7nT6KWasgUHYSkyjRx5kMEOSZDUqs7xRenY-4ZCh3VU">
+<img class="w-8 h-8 rounded-full border-2 border-[#080808] object-cover" data-alt="A detailed headshot of a female UX designer, short dark hair, minimalist black turtleneck, dark background with subtle geometric neon light reflections, cinematic studio lighting, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwNsq9AzeT1D_btutpVCRRElWf29zg6I3AqAQsREOB-RSzLoevFNh4zjr0hH0blDhxv_pUVd8syM6YVvEMSo9dGVTKbbNyY0ebrflTBH7R7TsykgjSVU1pf__zHonR00senLieNFNA8NdqzvRFgb3SHZ_Ypca_2ghzMInv3xKYBWWqKexL3hskx6sz7xniboqv9mFSxZfHwCx3-S7QR3LQ29a3TT9BDG0lULtP7Z_v5OoBsUVD6rXX">
+<div class="w-8 h-8 rounded-full border-2 border-[#080808] bg-[#242424] flex items-center justify-center font-label-sm text-label-sm text-white">+3</div>
+</div>
+</div>
+</div>
+<div class="hidden md:flex gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[#8A8A8A]">search</span>
+<input class="pl-10 pr-4 py-2 bg-[#121212] border border-[#242424] rounded text-white focus:outline-none focus:border-[#A8FF00] transition-colors w-64 font-body-md" placeholder="Search tasks..." type="text">
+</div>
+<button class="px-4 py-2 bg-transparent border border-[#242424] text-white hover:border-white transition-colors rounded font-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                </button>
+</div>
+</header>
+<!-- Kanban Board Scrollable Area -->
+<div class="flex-1 overflow-x-auto overflow-y-hidden pb-8">
+<div class="flex gap-gutter h-full min-w-max">
+<!-- Column: Todo -->
+<div class="w-80 flex flex-col h-full">
+<div class="flex items-center justify-between mb-4 px-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#8A8A8A]"></span>
+<h3 class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Todo</h3>
+<span class="text-[#474646] font-label-sm ml-1">4</span>
+</div>
+<button class="text-[#8A8A8A] hover:text-white"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="flex-1 overflow-y-auto space-y-3 pr-2">
+<!-- Card 1 -->
+<div class="elevation-1 p-4 rounded-lg cursor-pointer hover:border-white transition-colors">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-[#8A8A8A]">DEV-108</span>
+<span class="font-label-sm text-label-sm text-error border border-error px-1.5 rounded uppercase">High</span>
+</div>
+<h4 class="font-headline-md text-base leading-snug mb-4 text-primary">Implement Redis caching layer for API requests</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2 text-[#8A8A8A]">
+<span class="material-symbols-outlined text-[16px]">chat_bubble</span>
+<span class="font-label-sm">2</span>
+</div>
+<img class="w-6 h-6 rounded-full object-cover" data-alt="A stylized minimalist avatar portrait of a developer, dark theme, sharp angular features, subtle green glow from a screen, high contrast, tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCdVw4hmtP1CK-i2tdMhHF-3vFfoHhPWFXVt8jTun3a2qkKPT8YBEdpso0j4_nfXw_G8qXLfUc3hhoP0aDe0c8nJU7gytw4cWiVKCOewGUgnFlP_CkBW6Ga5K4ZleMEi_Y_KETif35kdfw1WSMQDMbsircwzjUvVVVD5xCZtiOj-R-wOkFgDf85N5y4rT_2LARLR8DfUAJDc3fLuTiV25mtqvRIEN55x8YFPHVan_lv-6X9fJcImQI">
+</div>
+</div>
+<!-- Card 2 -->
+<div class="elevation-1 p-4 rounded-lg cursor-pointer hover:border-white transition-colors">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-[#8A8A8A]">DEV-112</span>
+<span class="font-label-sm text-label-sm text-[#8A8A8A] border border-[#242424] px-1.5 rounded uppercase">Low</span>
+</div>
+<h4 class="font-headline-md text-base leading-snug mb-4 text-primary">Update documentation for v1.0.4 deployment</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2 text-[#8A8A8A]">
+<span class="material-symbols-outlined text-[16px]">check_box</span>
+<span class="font-label-sm">0/3</span>
+</div>
+<div class="w-6 h-6 rounded-full border border-dashed border-[#474646] flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-[#474646]">person_add</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: In Progress (Active) -->
+<div class="w-80 flex flex-col h-full">
+<div class="flex items-center justify-between mb-4 px-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#A8FF00]"></span>
+<h3 class="font-label-sm text-label-sm text-primary uppercase tracking-wider">In Progress</h3>
+<span class="text-[#A8FF00] font-label-sm ml-1">2</span>
+</div>
+<button class="text-[#8A8A8A] hover:text-white"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 overflow-y-auto space-y-3 pr-2">
+<!-- Card 3 (Active) -->
+<div class="elevation-1 p-4 rounded-lg cursor-pointer glow-accent">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-[#A8FF00]">DEV-102</span>
+<span class="font-label-sm text-label-sm text-error border border-error px-1.5 rounded uppercase">High</span>
+</div>
+<h4 class="font-headline-md text-base leading-snug mb-2 text-primary">Refactor auth middleware to support JWT refresh tokens</h4>
+<div class="w-full bg-[#242424] h-1 rounded-full mb-4 overflow-hidden">
+<div class="bg-[#A8FF00] h-full" style="width: 65%;"></div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2 text-[#8A8A8A]">
+<span class="material-symbols-outlined text-[16px]">check_box</span>
+<span class="font-label-sm text-[#e3e2e2]">5/8</span>
+</div>
+<img class="w-6 h-6 rounded-full object-cover border border-[#A8FF00]" data-alt="A detailed headshot of a software developer with glasses, in a minimalist dark cyberpunk setting, dramatic green rim lighting, professional yet edgy portrait, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw_0N2z1Tm47iyOt2rxT2SeO9bXEcndETnzC9N-47byN64-sGLWNLSxi1GbrFvovuOzh06EwUYuPze7SxiXhnPf_StgrVtWgteiTvw4PbrnnOYXY9t237-gYJwe7oVGMwIKukCb3jbeihG7Qm3VVBamXIlHsQJT-sluF1_hWms0ky_LvGbVHvrATbQ7IPvmo79kjfogK4URo3Jid979bgpD5FBRhoh1WNI-NCMME0FemiI4j_fDYhh">
+</div>
+</div>
+<!-- Card 4 -->
+<div class="elevation-1 p-4 rounded-lg cursor-pointer hover:border-white transition-colors">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-[#8A8A8A]">DEV-105</span>
+<span class="font-label-sm text-label-sm text-[#c9c6c5] border border-[#474646] px-1.5 rounded uppercase">Med</span>
+</div>
+<h4 class="font-headline-md text-base leading-snug mb-4 text-primary">Design System UI component library audit</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex items-center gap-3 text-[#8A8A8A]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">attach_file</span>
+<span class="font-label-sm">3</span>
+</div>
+</div>
+<img class="w-6 h-6 rounded-full object-cover" data-alt="A detailed headshot of a female UX designer, short dark hair, minimalist black turtleneck, dark background with subtle geometric neon light reflections, cinematic studio lighting, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj-70y48IIwdiIXpoW8lWscP3H_z9-9KMVFMFAUANbALEc-pfs8bDvp9Az_PUd6ENkWmxJ1mUj-T48uzDBOwo0EVfGf88UyIUvGcxTl02maf26vF7m5l8RjkpSY9VpsVAWHkUG5IUj2XUcp84xYenrmsx3LZlOPHzLFudIaLmueWLNCeVnUCCk-l1-mB8hWzIdFsUnlhX6tZyDps8ywnztHbd81b0rsKOthHomexABUVx3jcgjXRTK">
+</div>
+</div>
+</div>
+</div>
+<!-- Column: In Review -->
+<div class="w-80 flex flex-col h-full opacity-70 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between mb-4 px-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#c9c6c5]"></span>
+<h3 class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">In Review</h3>
+<span class="text-[#474646] font-label-sm ml-1">1</span>
+</div>
+<button class="text-[#8A8A8A] hover:text-white"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 overflow-y-auto space-y-3 pr-2">
+<!-- Card 5 -->
+<div class="elevation-1 p-4 rounded-lg cursor-pointer hover:border-white transition-colors border-dashed border-[#474646]">
+<div class="flex justify-between items-start mb-3">
+<span class="font-label-sm text-label-sm text-[#8A8A8A]">DEV-098</span>
+<span class="font-label-sm text-label-sm text-[#c9c6c5] border border-[#474646] px-1.5 rounded uppercase">Med</span>
+</div>
+<h4 class="font-headline-md text-base leading-snug mb-4 text-[#8A8A8A] line-through decoration-[#474646]">Optimize database queries for user dashboard</h4>
+<div class="flex justify-between items-center mt-auto">
+<div class="flex items-center gap-1 text-[#A8FF00]">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span class="font-label-sm">PR Open</span>
+</div>
+<img class="w-6 h-6 rounded-full object-cover grayscale" data-alt="A stylized minimalist avatar portrait of a developer, dark theme, sharp angular features, subtle green glow from a screen, high contrast, tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChkwsJJzs4RrlCsC3ly8v8mTbzpwNo4mQVgJGTF_EkjypW8UQtox2Nx3tjfvlObhD6Q3qn-5Phj8o2T3__sUlkyCwnUE-vJOxt_mA6UexN4e8vYrphZ2VAyYK_LkR5mqg-ZffQq18spe3usRZKpajAwx_LXUbf0G94qAq-L3pI9KoXmzjbSR3K4ZPrEGcfJO9HrNKfOsIUbxPpiJ4Jou9-8JGEAMgk8qEzPClVLXHZNIStxUcdyv7v">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

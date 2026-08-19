@@ -1,0 +1,415 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DevForge - Project Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#b7b4b4",
+                        "inverse-primary": "#436900",
+                        "primary-container": "#a5fa00",
+                        "surface-container-highest": "#343535",
+                        "tertiary-fixed": "#e5e2e1",
+                        "tertiary-container": "#e5e2e1",
+                        "background": "#121414",
+                        "error-container": "#93000a",
+                        "surface-variant": "#343535",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-primary": "#203600",
+                        "on-primary-fixed-variant": "#314f00",
+                        "surface": "#121414",
+                        "on-tertiary-container": "#656464",
+                        "on-tertiary": "#313030",
+                        "tertiary": "#ffffff",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "error": "#ffb4ab",
+                        "outline": "#8b947a",
+                        "surface-container": "#1f2020",
+                        "inverse-surface": "#e3e2e2",
+                        "inverse-on-surface": "#303031",
+                        "on-background": "#e3e2e2",
+                        "on-surface": "#e3e2e2",
+                        "surface-container-high": "#292a2a",
+                        "surface-tint": "#90db00",
+                        "on-secondary-fixed-variant": "#474646",
+                        "surface-bright": "#383939",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "outline-variant": "#414a34",
+                        "surface-dim": "#121414",
+                        "on-error": "#690005",
+                        "on-primary-container": "#476f00",
+                        "on-error-container": "#ffdad6",
+                        "secondary": "#c9c6c5",
+                        "on-primary-fixed": "#112000",
+                        "on-secondary": "#313030",
+                        "primary": "#ffffff",
+                        "surface-container-low": "#1b1c1c",
+                        "primary-fixed": "#a5fa00",
+                        "on-surface-variant": "#c0caad",
+                        "secondary-container": "#474646",
+                        "primary-fixed-dim": "#90db00",
+                        "secondary-fixed-dim": "#c9c6c5",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "surface-container-lowest": "#0d0e0f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px",
+                        "margin-mobile": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["72px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for minimalist aesthetic */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #343535;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #474646;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen w-full flex overflow-hidden antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 flex-col bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant flex py-8 px-4 flex-shrink-0 z-20">
+<!-- Header -->
+<div class="flex items-center gap-4 mb-12 px-2">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A highly detailed, minimalist isometric geometric logo featuring the letters D and F interlocking. The design is stark and technical, set against a dark charcoal background, with sharp, precise edges illuminated by a subtle, ambient high-tech white light. It conveys a premium, developer-focused aesthetic without any glowing neon elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3p7ley7x2riphGUYcIiu-cTjIElA9cHkM78NvhSe_E9xQ9y0gROcgPXxiqfPEOXLf-nVlxODdKUwNtTpYtjoOh943PiDWRLh8KpOLcTFw98aNqf_48UsnccEyrIyElvmroUUqaDWzoD5IvdAgqZeDXLCo2M_szJcEq6zXLu6GjjCwP0mJPvYIL-WUfw0KF3creaAJ9Ohx_gT6Czl6owXyWbYcSe4N1fXacEFKs8VMd8iQ2Dye__wb">
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-none">DevForge</h1>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 block">v1.0.4</span>
+</div>
+</div>
+<!-- CTA -->
+<button class="w-full bg-surface-container-highest hover:bg-outline-variant transition-colors border border-outline-variant text-on-surface font-label-sm text-label-sm py-3 rounded-lg mb-8 flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+            New Project
+        </button>
+<!-- Main Nav -->
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-primary transition-all duration-200 ease-in-out hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-primary transition-all duration-200 ease-in-out hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">view_kanban</span>
+<span class="font-label-sm text-label-sm">Kanban</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-primary transition-all duration-200 ease-in-out hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-sm text-label-sm">Team</span>
+</a>
+<!-- Active State Navigation -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-on-primary-fixed-variant bg-primary-container rounded-lg border border-primary-fixed transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-sm text-label-sm">Chat</span>
+</a>
+</nav>
+<!-- Footer Nav -->
+<div class="mt-auto flex flex-col gap-2 pt-8 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all duration-200 ease-in-out hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined text-[18px]">description</span>
+<span class="font-label-sm text-label-sm">Docs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:text-primary transition-all duration-200 ease-in-out hover:bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span class="font-label-sm text-label-sm">Help</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background relative z-10">
+<!-- TopNavBar (Shared Component) -->
+<header class="w-full h-16 bg-background dark:bg-background border-b border-outline-variant flex justify-between items-center px-margin-desktop flex-shrink-0 z-20">
+<!-- Search Bar (Left) -->
+<div class="flex items-center w-64 bg-surface-container-low border border-outline-variant rounded-md px-3 py-1.5 focus-within:border-primary-fixed focus-within:ring-1 focus-within:ring-primary-fixed transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] mr-2">search</span>
+<input class="bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 p-0 w-full placeholder-on-surface-variant" placeholder="Search..." type="text">
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary-fixed transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary-fixed transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full border border-outline-variant overflow-hidden ml-2 cursor-pointer hover:border-primary-fixed transition-colors">
+<img class="w-full h-full object-cover" data-alt="A highly detailed, professional headshot portrait of a software engineer, styled for an avatar in a dark-themed UI. The lighting is dramatic and moody, utilizing high-key shadows to match a minimalist-technic aesthetic. The background is a pure deep charcoal grey, allowing the subject to stand out subtly without any distracting elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBA_KUh_uX5LMylga2cDSvZw0sTCrMIr6_dtnfThOf3tsuTcLuEuk2f2jpNT3ByK8X1u-XrlrIF8jwi9O0h7oZBdr8x1Ai6jEWl0I3Trkei9uAbdBwL8fnCu85484SDG4HmtkO_Ojd3_1DPtR2g4WyHXCqzAvA5pEi-A00maxOl77Y8ZX09wliaLAgggzjKMYBDqfl0i8976jVi2BzA0DZYMTZ7EH2ZAaysxVND5hqSoTkz2o9_O3N">
+</div>
+</div>
+</header>
+<!-- Sub-Header / Channel Context -->
+<div class="h-14 border-b border-outline-variant bg-surface flex items-center px-gutter flex-shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">tag</span>
+<h2 class="font-headline-md text-[18px] font-semibold text-on-surface">core-api-v2</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-4 border-l border-outline-variant pl-4">Architecture and implementation sync</span>
+</div>
+</div>
+<!-- Chat Split View -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Center Canvas: Chat History & Composer -->
+<section class="flex-1 flex flex-col min-w-0 bg-background relative">
+<!-- Background Subtle Gradient Pattern to break the solid dark -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#414a34 1px, transparent 1px); background-size: 24px 24px;"></div>
+<!-- Messages Area -->
+<div class="flex-1 overflow-y-auto px-margin-desktop py-8 flex flex-col gap-8 relative z-10">
+<!-- Date Divider -->
+<div class="flex justify-center my-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest px-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-low shadow-sm">Today</span>
+</div>
+<!-- Message Group (Other User) -->
+<div class="flex gap-4 max-w-4xl">
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden flex-shrink-0 mt-1">
+<img class="w-full h-full object-cover" data-alt="A highly detailed portrait avatar of a senior female developer with short dark hair, wearing minimalist black clothing. Set against a stark, pure charcoal grey background to match the dark-mode minimal technic UI aesthetic. Lighting is crisp and professional, conveying focus and authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm4MlRlUDjLoHQdELRpezs2MOwPcD5UyZYOt8ysQRh7hRNz21oJGlZePUeRNsFHygq_CqmfcKBMWV8ly8fUwQ-U1PUM60kN36oFNjxEN5KcRx-_h6hDbY31U0ISyRgDeut-1A_ResmTrEPPQ77E7BDwoHHsNMmoMnymETMyIAJO590CoegccOcre5k73kQMrok42afARrUuDbVDRHoI8MbwDK63kwpv3aUdbVCkTSLlnOYSR1V4n_X">
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-baseline gap-3 mb-1">
+<span class="font-body-md text-body-md font-semibold text-primary">Sarah Jenkins</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10:42 AM</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-low border border-outline-variant rounded-2xl rounded-tl-none p-4 w-fit shadow-sm">
+<p>I've reviewed the PR for the authentication middleware. Looks solid overall, but I noticed a potential race condition in the token refresh logic. Could we implement a debounce or a lock mechanism there?</p>
+</div>
+</div>
+</div>
+<!-- Message Group (Other User - Code Snippet) -->
+<div class="flex gap-4 max-w-4xl">
+<div class="w-10 h-10 rounded-full border border-outline-variant overflow-hidden flex-shrink-0 mt-1">
+<img class="w-full h-full object-cover" data-alt="A highly detailed portrait avatar of a young male systems architect with glasses, looking intensely focused. Set against a pure deep charcoal grey background, adhering strictly to a minimalist, dark-mode developer UI aesthetic. Subtle lighting highlights the subject's face against the void." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC67tTHvLD27qXCJ-e6yIwDvkP0LMsBBymVMYaIptrYAi637KygCiVFhbqtrSefeSVw00PYbmYXaReMygkffLY7SlzNxQtRfuh_xw2aQfY0RiaKE13G7u5S3B0d_yHQnu1EpMzT7HjcgfYwutEb1E-Sx0oMBAI7kI7xAIXt4fZppQcOt8PmyRo8B4QiKnBxOotlTK0R2IGQd78VNj8tIrtQMB_CKBUM0BI804PO_Ip6Nh1zRiP0DlVe">
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-baseline gap-3 mb-1">
+<span class="font-body-md text-body-md font-semibold text-primary">Marcus Vance</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10:47 AM</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-low border border-outline-variant rounded-2xl rounded-tl-none p-4 w-fit shadow-sm">
+<p class="mb-3">Good catch, Sarah. I was thinking something along the lines of a Mutex for the refresh block. Here is a quick prototype of how that might look in Go:</p>
+<!-- Code Block Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden mt-2">
+<div class="bg-surface-container-high px-4 py-2 border-b border-outline-variant flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">auth_service.go</span>
+<button class="text-on-surface-variant hover:text-primary-fixed"><span class="material-symbols-outlined text-[16px]">content_copy</span></button>
+</div>
+<pre class="p-4 overflow-x-auto"><code class="font-label-sm text-label-sm text-primary-fixed block whitespace-pre">
+var refreshMutex sync.Mutex
+
+func (s *AuthService) RefreshToken(ctx context.Context, oldToken string) (string, error) {
+    refreshMutex.Lock()
+    defer refreshMutex.Unlock()
+
+    // Check if token was already refreshed by another concurrent request
+    if s.cache.Has(oldToken) {
+        return s.cache.Get(oldToken), nil
+    }
+
+    // ... proceed with DB call and generation ...
+}
+                                    </code></pre>
+</div>
+</div>
+<!-- Reactions -->
+<div class="flex gap-2 mt-2 ml-1">
+<button class="flex items-center gap-1 bg-surface-container-high border border-outline-variant hover:border-primary-fixed rounded-full px-2 py-1 transition-colors">
+<span class="text-[14px]">👍</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">2</span>
+</button>
+<button class="flex items-center gap-1 bg-surface-container-high border border-outline-variant hover:border-primary-fixed rounded-full px-2 py-1 transition-colors">
+<span class="text-[14px]">🚀</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">1</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message Group (Self) -->
+<div class="flex gap-4 max-w-4xl self-end flex-row-reverse">
+<div class="w-10 h-10 rounded-full border border-primary-fixed overflow-hidden flex-shrink-0 mt-1 relative">
+<img class="w-full h-full object-cover" data-alt="A highly detailed portrait avatar of the current user, styled for a developer workspace dark theme. The background is a very dark, neutral charcoal. The lighting is crisp, accentuating a modern, professional appearance, seamlessly fitting into a sleek, minimal-technic UI without heavy shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZBOmYlXBiUeeZXGcVHIpb-oekemDH0OpqJ4dkCg4Y6FA2Js9Y2ddLHutEhXcFoMaDya549MVSRdbpnc3uMGOWmDairJvUruGZjQYASjO2kqgG8zN7xdgPW4Yrs_wh8OwVALB4QiYCzeE-1ziS_B4rfJ-wQj-l94JeHqdBwKb_ut2sZge7CKuAX3f6dEFEvPg2gp5JOjYJuoCjQgzUoc-LCh3y72VkT9MLMj64Imhf3WqBKjSQJ-ej">
+<!-- Active indicator -->
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-primary-fixed border-2 border-background rounded-full"></span>
+</div>
+<div class="flex-1 flex flex-col items-end">
+<div class="flex items-baseline gap-3 mb-1 flex-row-reverse">
+<span class="font-body-md text-body-md font-semibold text-primary">You</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10:55 AM</span>
+</div>
+<!-- Self Message styling is slightly distinct, perhaps a darker fill -->
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-high border border-outline-variant rounded-2xl rounded-tr-none p-4 w-fit shadow-sm">
+<p>I'll integrate that Mutex pattern, Marcus. I'll also add a brief TTL cache specifically for the old token to handle network retries cleanly without hitting the DB twice. Expect an updated PR in about 20 minutes.</p>
+</div>
+</div>
+</div>
+<!-- System Notice -->
+<div class="flex justify-center my-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">commit</span>
+                            PR #442 updated by <strong class="text-on-surface">You</strong>
+</span>
+</div>
+</div>
+<!-- Message Composer Area -->
+<div class="p-gutter border-t border-outline-variant bg-surface relative z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+<div class="max-w-5xl mx-auto flex items-end gap-4 bg-surface-container-low border border-outline-variant rounded-xl p-2 focus-within:border-primary-fixed focus-within:ring-1 focus-within:ring-primary-fixed transition-all duration-300">
+<!-- Attachments -->
+<button class="p-2 text-on-surface-variant hover:text-primary-fixed transition-colors flex-shrink-0 mb-1">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<!-- Input -->
+<div class="flex-1 py-1 min-h-[44px] flex items-center">
+<textarea class="w-full bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 resize-none p-0 max-h-32 placeholder-on-surface-variant" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Message #core-api-v2... (Use markdown for code blocks)" rows="1"></textarea>
+</div>
+<!-- Tools & Send -->
+<div class="flex items-center gap-2 flex-shrink-0 mb-1">
+<button class="p-2 text-on-surface-variant hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined">mood</span>
+</button>
+<button class="bg-primary-container text-on-primary-fixed-variant p-2.5 rounded-lg hover:bg-primary-fixed transition-all duration-200 shadow-[0_0_15px_rgba(165,250,0,0.15)] hover:shadow-[0_0_25px_rgba(165,250,0,0.3)]">
+<span class="material-symbols-outlined text-[20px] translate-x-0.5">send</span>
+</button>
+</div>
+</div>
+<!-- Helper Text -->
+<div class="max-w-5xl mx-auto mt-2 flex justify-between px-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px]"><strong>Enter</strong> to send, <strong>Shift+Enter</strong> for new line</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px]">Markdown supported</span>
+</div>
+</div>
+</section>
+<!-- Right Sidebar: Online Members -->
+<aside class="w-72 border-l border-outline-variant bg-surface-container-low flex-col hidden xl:flex flex-shrink-0 z-20">
+<!-- Header -->
+<div class="h-14 flex items-center px-6 border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-label-sm text-label-sm font-semibold uppercase tracking-widest text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-fixed animate-pulse"></span>
+                        Members — 12
+                    </h3>
+</div>
+<!-- Member List -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Category: Online -->
+<div>
+<h4 class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant pb-2">Online (3)</h4>
+<div class="flex flex-col gap-4">
+<!-- Member Item -->
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-8 h-8 flex-shrink-0">
+<div class="w-full h-full rounded-full border border-outline-variant overflow-hidden group-hover:border-primary-fixed transition-colors">
+<img class="w-full h-full object-cover" data-alt="A highly detailed professional portrait of a software engineer for an avatar. Dark charcoal background, minimalist aesthetic, sharp focus, no heavy shadows. Deep, tech-focused editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFvWS0etaIrngFToTuWtSO3L47ciyVCrzyoo92YaO9YRCXVzp2fZ42BdI7IomD4O6vcSUCCc7BZSFhTjy05yw_-PmLymGc541O1I32twyAVln6dYPaVsanHoApfLkXJ3-ptitZODmx7Qv9DOmRyy_u1iPtkz0LGdOcAQ-WQdc0BiGp_uRCOeE-PCwh61K-mW41pG867lTSxcidWnqpU7hjVnOLPP2HxcJ1cqekOItmBYpikOctIgWo">
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-primary-fixed border-[2px] border-surface-container-low rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] text-on-surface group-hover:text-primary transition-colors">Marcus Vance</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Systems Architect</span>
+</div>
+</div>
+<!-- Member Item -->
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-8 h-8 flex-shrink-0">
+<div class="w-full h-full rounded-full border border-outline-variant overflow-hidden group-hover:border-primary-fixed transition-colors">
+<img class="w-full h-full object-cover" data-alt="A highly detailed professional portrait of a software engineer for an avatar. Dark charcoal background, minimalist aesthetic, sharp focus, no heavy shadows. Deep, tech-focused editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1g0jHZjZjO5KZIyj-EFW8k6BbX2_UcGt4PtYc1s3X-GPXlEdWsBtxHLK19Iy6GYNUXR4uIFlylnsMA7gIAZH8qwKoCC2tHJh70JNnOJEK54YwhjnhhtdFi68jv8OeQhKEhwp6ZwVRJ-T2DqYZrGqGtu0pTNbdDLr4b1u6dprnHhv7OJTdBbcias7hoaSJueIU82c7xAzgHo-88oKOtCBKlRUR4gqxjeLgrSg4RnVVyHJfa_SrWhLC">
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-primary-fixed border-[2px] border-surface-container-low rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] text-on-surface group-hover:text-primary transition-colors">Sarah Jenkins</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Lead Developer</span>
+</div>
+</div>
+<!-- Member Item (Self) -->
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="relative w-8 h-8 flex-shrink-0">
+<div class="w-full h-full rounded-full border border-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A highly detailed professional portrait of a software engineer for an avatar. Dark charcoal background, minimalist aesthetic, sharp focus, no heavy shadows. Deep, tech-focused editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-nZkXousJ4W2_PABMx3uMf74yGFmu8p6N3QU62DCcGvyASE3HtfAarZKwLqfeiNVKawiSFVUWllopkAt9Sf-zNqmNOxglhoIRCavnZhVclHd5BdoajllwUVbq-bJdxB5DcVAmJsAiaA-LP8wrypRCKlmceI5Juvhxyv9u05wIGOiJjnAs-fEb3HE4ECecjaj5YlGYHjns6b-L00e5cI1rbdgUWQ1K6AFwStklREWZAYfybfuHV63V">
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-primary-fixed border-[2px] border-surface-container-low rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] text-on-surface font-semibold">You</span>
+<span class="font-label-sm text-[10px] text-primary-fixed">Working on PR #442</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category: Offline (Truncated for clean design) -->
+<div class="mt-4">
+<h4 class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant pb-2">Offline (9)</h4>
+<div class="flex flex-col gap-4 opacity-60">
+<!-- Offline Member Item -->
+<div class="flex items-center gap-3 cursor-pointer group hover:opacity-100 transition-opacity">
+<div class="relative w-8 h-8 flex-shrink-0">
+<div class="w-full h-full rounded-full border border-outline-variant overflow-hidden filter grayscale">
+<img class="w-full h-full object-cover" data-alt="A highly detailed professional portrait of a software engineer for an avatar. Dark charcoal background, minimalist aesthetic, sharp focus, no heavy shadows. Deep, tech-focused editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDNoUSmofKpkl2W0b79xtsJ5MCiIHVuE4aK5_u62bLXhNpwE2_bIdIqiWNyvZShrOMKCLffysn2nSPHajrvZwH7hHu645b6OHTKb4tcSjyQwLBdZKEuhZbHabTshbXsy-q39dl97ls936huDuX08qDZh8BiScGJPys8L_QwkbwxfYfk-Ds76b-RnFfbumBliBYMWsPKtmXyYx5YmRSm5d07OjostyBajp-GcqPqA9RsT5QbIOPkTHn">
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] text-on-surface">David Chen</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">DevOps</span>
+</div>
+</div>
+<!-- Offline Member Item -->
+<div class="flex items-center gap-3 cursor-pointer group hover:opacity-100 transition-opacity">
+<div class="relative w-8 h-8 flex-shrink-0">
+<div class="w-full h-full rounded-full border border-outline-variant overflow-hidden filter grayscale">
+<img class="w-full h-full object-cover" data-alt="A highly detailed professional portrait of a software engineer for an avatar. Dark charcoal background, minimalist aesthetic, sharp focus, no heavy shadows. Deep, tech-focused editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_5Jx7RfYTUIe7DU2RbALJjhJQOiNcrx6Uofw4NfXUlryNMPZ6g-c4EY3ipJWRb7w4TNM_blEyUW-jZXpDpRoZpTJDrujg8GRSUgFNsudFYNTusu6xta_VFyErq-h4fsJq91qwx6GSQK6tS5Lu_lHXwagB1xKd208VZN2E14tRFMNtTYtnGCBaooODIBjvkfBh99nDAnHPWT6WqyFUyvcYRNfg2r8bGZMiRktFf3QqCCeHTMZrO0ap">
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-[14px] text-on-surface">Elena Rostova</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">QA Lead</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

@@ -1,1 +1,14 @@
-/docs
+# Environment files
+.env
+*.env
+
+# Dependencies
+node_modules/
+
+# Production build artifacts
+dist/
+build/
+
+# Go compiled binaries
+backend/server
+*.exe

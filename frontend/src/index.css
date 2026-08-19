@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #121414;
+    --surface-0: #0d0e0f;
+    --surface-1: #121414;
+    --surface-2: #1b1c1c;
+    --surface-3: #1f2020;
+    --surface-high: #292a2a;
+    --border-subtle: #414a34;
+    --border-hover: #8b947a;
+    --signal-neon: #a5fa00;
+    --text-primary: #e3e2e2;
+    --text-muted: #c0caad;
+    --text-dim: #8b947a;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Hanken Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Custom Design Utility Classes matching Stitch Design System */
+.font-display {
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+.font-mono-tag {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Ambient Radial Glow Effect for Login/Modal Canvas */
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(circle at 50% 0%, rgba(165, 250, 0, 0.15) 0%, transparent 70%);
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Tonal Elevations */
+.elevation-1,
+.card-level-1 {
+  background-color: #121414;
+  border: 1px solid #292a2a;
+  border-radius: 0.5rem;
+}
+
+.elevation-2 {
+  background-color: #181818;
+  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid #292a2a;
+  border-radius: 0.5rem;
+}
+
+.active-edge {
+  border: 1px solid #a5fa00 !important;
+  box-shadow: inset 0 0 8px rgba(168, 255, 0, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #a5fa00;
+  color: #112000;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #90db00;
+  transform: scale(1.01);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #292a2a;
+  color: #ffffff;
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: #ffffff;
+}
+
+/* Status Badges */
+.status-badge-active {
+  border: 1px solid #a5fa00;
+  color: #a5fa00;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-badge-neutral {
+  border: 1px solid #8b947a;
+  color: #8b947a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot-active {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #a5fa00;
+}
+
+.status-dot-neutral {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #8b947a;
+}
+
+.stat-glow {
+  text-shadow: 0 0 12px rgba(165, 250, 0, 0.4);
+}
