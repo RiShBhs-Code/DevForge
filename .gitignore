@@ -12,3 +12,7 @@ build/
 # Go compiled binaries
 backend/server
 *.exe
+
+docs
+
+agents
