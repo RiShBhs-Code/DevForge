@@ -13,6 +13,6 @@ build/
 backend/server
 *.exe
 
-docs
+/docs
 
-agents
+/agents
