@@ -97,6 +97,36 @@ export interface AddMemberPayload {
   email: string;
 }
 
+export interface ChatMessage {
+  id: string;
+  projectId: string;
+  senderId: string;
+  sender?: User;
+  content: string;
+  createdAt: string;
+}
+
+export type NotificationType =
+  | 'MEMBER_ADDED'
+  | 'TASK_ASSIGNED'
+  | 'TASK_COMPLETED'
+  | 'CHAT_MESSAGE'
+  | 'SYSTEM';
+
+export interface NotificationItem {
+  id: string;
+  userId: string;
+  type: NotificationType;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface WSMessageEvent {
+  type: string;
+  payload: any;
+}
+
 export interface ApiError {
   error: string;
 }

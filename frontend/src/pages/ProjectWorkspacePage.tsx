@@ -8,6 +8,7 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EditProjectModal } from '../components/projects/EditProjectModal';
 import { KanbanBoard } from '../components/tasks/KanbanBoard';
 import { MemberList } from '../components/members/MemberList';
+import { ProjectChatView } from '../components/chat/ProjectChatView';
 import {
   ArrowLeft,
   Settings,
@@ -314,12 +315,12 @@ export const ProjectWorkspacePage: React.FC = () => {
         )}
 
         {activeTab === 'chat' && (
-          <div className="col-span-12 elevation-1 p-12 text-center flex flex-col items-center">
-            <MessageSquare className="w-12 h-12 text-[#a5fa00] mb-4" />
-            <h3 className="font-display font-bold text-xl text-white">Real-Time Project Chat</h3>
-            <p className="text-sm text-[#c0caad] mt-2 max-w-md">
-              Milestone 4 will integrate real-time WebSocket communication for project chat.
-            </p>
+          <div className="col-span-12">
+            <ProjectChatView
+              projectId={currentProject.id}
+              projectTitle={currentProject.title}
+              members={members}
+            />
           </div>
         )}
       </div>

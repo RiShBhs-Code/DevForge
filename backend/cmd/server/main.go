@@ -8,12 +8,16 @@ import (
 	"time"
 
 	"devforge/backend/config"
+	"devforge/backend/internal/admin"
 	"devforge/backend/internal/auth"
+	"devforge/backend/internal/chat"
 	"devforge/backend/internal/database"
 	"devforge/backend/internal/members"
 	"devforge/backend/internal/middleware"
+	"devforge/backend/internal/notifications"
 	"devforge/backend/internal/projects"
 	"devforge/backend/internal/tasks"
+	"devforge/backend/internal/users"
 
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
@@ -50,6 +54,16 @@ func main() {
 	projectHandler := projects.NewHandler(db.Database)
 	taskHandler := tasks.NewHandler(db.Database)
 	memberHandler := members.NewHandler(db.Database)
+	adminHandler := admin.NewHandler(db.Database)
+
+	chatHub := chat.NewHub()
+	go chatHub.Run()
+
+	chatHandler := chat.NewHandler(db.Database, chatHub, cfg.JWTSecret)
+	notifHandler := notifications.NewHandler(db.Database)
+
+	// WebSocket endpoint
+	r.Get("/ws/projects/{id}", chatHandler.HandleWebSocket)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +104,9 @@ func main() {
 			r.Get("/{id}/members", memberHandler.GetProjectMembers)
 			r.Post("/{id}/members", memberHandler.AddProjectMember)
 			r.Delete("/{id}/members/{userId}", memberHandler.RemoveProjectMember)
+
+			// Chat sub-routes
+			r.Get("/{id}/messages", chatHandler.GetProjectMessages)
 		})
 
 		// Protected task routes
@@ -98,6 +115,26 @@ func main() {
 			r.Get("/my", taskHandler.GetMyTasks)
 			r.Put("/{id}", taskHandler.UpdateTask)
 			r.Delete("/{id}", taskHandler.DeleteTask)
+		})
+
+		// Protected notification routes
+		r.Route("/notifications", func(r chi.Router) {
+			r.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+			r.Get("/", notifHandler.GetNotifications)
+			r.Patch("/{id}/read", notifHandler.MarkAsRead)
+			r.Post("/read-all", notifHandler.MarkAllAsRead)
+		})
+
+		// Protected Admin-only routes
+		r.Route("/admin", func(r chi.Router) {
+			r.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+			r.Use(middleware.RequireRole(users.RoleAdmin))
+			r.Get("/stats", adminHandler.GetStats)
+			r.Get("/users", adminHandler.ListUsers)
+			r.Put("/users/{id}/role", adminHandler.UpdateUserRole)
+			r.Delete("/users/{id}", adminHandler.DeleteUser)
+			r.Get("/projects", adminHandler.ListProjects)
+			r.Delete("/projects/{id}", adminHandler.DeleteProject)
 		})
 	})
 

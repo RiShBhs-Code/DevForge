@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"devforge/backend/internal/middleware"
+	"devforge/backend/internal/notifications"
 	"devforge/backend/internal/users"
 
 	"github.com/go-chi/chi/v5"
@@ -200,6 +201,24 @@ func (h *Handler) AddProjectMember(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(ErrorResponse{Error: "Failed to add project member"})
 		return
 	}
+
+	// Fetch project title for notification
+	projectsColl := h.db.Collection("projects")
+	var proj struct {
+		Title string `bson:"title"`
+	}
+	projTitle := "DevForge Project"
+	if err := projectsColl.FindOne(ctx, bson.M{"_id": projectID}).Decode(&proj); err == nil && proj.Title != "" {
+		projTitle = proj.Title
+	}
+
+	_ = notifications.CreateNotification(
+		ctx,
+		h.db,
+		targetUser.ID,
+		notifications.TypeMemberAdded,
+		"You were added to "+projTitle+".",
+	)
 
 	targetUserResp := targetUser.ToResponse()
 	w.WriteHeader(http.StatusCreated)

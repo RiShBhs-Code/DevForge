@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # MongoDB Database Container
+  mongodb:
+    image: mongo:7.0
+    container_name: devforge-db
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=devforge
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - devforge-net
+
+  # Go REST API & WebSocket Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: devforge-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - MONGODB_URI=mongodb://mongodb:27017/devforge
+      - DB_NAME=devforge
+      - JWT_SECRET=devforge-production-super-secret-jwt-key-2026
+      - CLIENT_URL=http://localhost
+    depends_on:
+      - mongodb
+    networks:
+      - devforge-net
+
+  # React Frontend Nginx Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: devforge-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - devforge-net
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  devforge-net:
+    driver: bridge

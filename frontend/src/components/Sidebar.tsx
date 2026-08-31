@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { CreateProjectModal } from './projects/CreateProjectModal';
 import { useProjectStore } from '../stores/projectStore';
+import { useNotificationStore } from '../stores/notificationStore';
 import {
   Hexagon,
   LayoutDashboard,
@@ -22,11 +23,18 @@ import {
 export const Sidebar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
   const { fetchProjects } = useProjectStore();
+  const { unreadCount, fetchNotifications } = useNotificationStore();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchNotifications().catch(() => {});
+    }
+  }, [isAuthenticated, fetchNotifications]);
 
   if (!isAuthenticated) return null;
 
@@ -36,6 +44,9 @@ export const Sidebar: React.FC = () => {
     { label: 'My Tasks', path: '/tasks', icon: CheckSquare },
     { label: 'Notifications', path: '/notifications', icon: Bell },
     { label: 'Profile', path: '/profile', icon: UserIcon },
+    ...(user?.role === 'ADMIN'
+      ? [{ label: 'Admin', path: '/admin', icon: Shield }]
+      : []),
   ];
 
   const isActive = (path: string) => {
@@ -76,18 +87,27 @@ export const Sidebar: React.FC = () => {
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
+            const isNotif = item.path === '/notifications';
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3.5 px-4 py-3 rounded-md font-mono-tag text-xs transition-all duration-200 ${
+                className={`flex items-center justify-between px-4 py-3 rounded-md font-mono-tag text-xs transition-all duration-200 ${
                   active
                     ? 'bg-[#474646]/60 text-white border-r-2 border-[#a5fa00] font-semibold translate-x-0.5 shadow-sm'
                     : 'text-[#c0caad] hover:bg-[#292a2a] hover:text-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-[#a5fa00]' : 'text-[#8b947a]'}`} />
-                <span>{item.label}</span>
+                <div className="flex items-center gap-3.5">
+                  <Icon className={`w-4 h-4 ${active ? 'text-[#a5fa00]' : 'text-[#8b947a]'}`} />
+                  <span>{item.label}</span>
+                </div>
+
+                {isNotif && unreadCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-[#a5fa00] text-[#080808] font-mono-tag text-[10px] font-bold">
+                    {unreadCount}
+                  </span>
+                )}
               </Link>
             );
           })}

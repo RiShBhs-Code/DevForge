@@ -10,6 +10,7 @@ import { ProjectWorkspacePage } from './pages/ProjectWorkspacePage';
 import { MyTasksPage } from './pages/MyTasksPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { AdminPage } from './pages/AdminPage';
 import { useAuthStore } from './stores/authStore';
 
 const ProtectedLayout: React.FC = () => {
@@ -48,6 +49,7 @@ export const App: React.FC = () => {
             <Route path="/tasks" element={<MyTasksPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Route>
 

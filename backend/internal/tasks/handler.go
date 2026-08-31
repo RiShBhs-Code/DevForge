@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"devforge/backend/internal/middleware"
+	"devforge/backend/internal/notifications"
 	"devforge/backend/internal/users"
 
 	"github.com/go-chi/chi/v5"
@@ -235,6 +236,16 @@ func (h *Handler) CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if task.AssignedTo != nil && !task.AssignedTo.IsZero() {
+		_ = notifications.CreateNotification(
+			ctx,
+			h.db,
+			*task.AssignedTo,
+			notifications.TypeTaskAssigned,
+			"You were assigned task \""+task.Title+"\".",
+		)
+	}
+
 	assigneeResp := h.fetchAssignee(ctx, task.AssignedTo)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(task.ToResponse(assigneeResp))
@@ -371,6 +382,29 @@ func (h *Handler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 	var updatedTask Task
 	_ = tasksColl.FindOne(ctx, bson.M{"_id": taskID}).Decode(&updatedTask)
+
+	// Trigger notifications
+	if req.Status == StatusCompleted && existingTask.Status != StatusCompleted {
+		if updatedTask.AssignedTo != nil && !updatedTask.AssignedTo.IsZero() {
+			_ = notifications.CreateNotification(
+				ctx,
+				h.db,
+				*updatedTask.AssignedTo,
+				notifications.TypeTaskCompleted,
+				"Task \""+updatedTask.Title+"\" was marked completed.",
+			)
+		}
+	} else if req.AssignedTo != "" && (existingTask.AssignedTo == nil || existingTask.AssignedTo.Hex() != req.AssignedTo) {
+		if updatedTask.AssignedTo != nil && !updatedTask.AssignedTo.IsZero() {
+			_ = notifications.CreateNotification(
+				ctx,
+				h.db,
+				*updatedTask.AssignedTo,
+				notifications.TypeTaskAssigned,
+				"You were assigned task \""+updatedTask.Title+"\".",
+			)
+		}
+	}
 
 	assigneeResp := h.fetchAssignee(ctx, updatedTask.AssignedTo)
 	json.NewEncoder(w).Encode(updatedTask.ToResponse(assigneeResp))
