@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProjectStore } from '../stores/projectStore';
 import { useAuthStore } from '../stores/authStore';
-import { Project } from '../types';
+import { useTaskStore } from '../stores/taskStore';
+import { useMemberStore } from '../stores/memberStore';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { EditProjectModal } from '../components/projects/EditProjectModal';
+import { KanbanBoard } from '../components/tasks/KanbanBoard';
+import { MemberList } from '../components/members/MemberList';
 import {
   ArrowLeft,
   Settings,
-  MoreVertical,
   ArrowUpRight,
   Filter,
-  CheckCircle2,
-  GitPullRequest,
   MessageSquare,
   Users,
   CheckSquare,
@@ -24,15 +24,29 @@ export const ProjectWorkspacePage: React.FC = () => {
   const navigate = useNavigate();
   const { currentProject, fetchProjectById, isLoading, error } = useProjectStore();
   const { user } = useAuthStore();
+  const { tasks, fetchProjectTasks } = useTaskStore();
+  const { members, fetchMembers } = useMemberStore();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'tasks' | 'members' | 'chat'>('overview');
   const [isEditOpen, setIsEditOpen] = useState(false);
 
+  const loadAllProjectData = async (projId: string) => {
+    try {
+      await Promise.all([
+        fetchProjectById(projId),
+        fetchProjectTasks(projId),
+        fetchMembers(projId),
+      ]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     if (id) {
-      fetchProjectById(id).catch(() => {});
+      loadAllProjectData(id);
     }
-  }, [id, fetchProjectById]);
+  }, [id]);
 
   if (isLoading && !currentProject) {
     return (
@@ -218,7 +232,6 @@ export const ProjectWorkspacePage: React.FC = () => {
               </div>
 
               <div className="flex-1 overflow-y-auto p-5 space-y-6">
-                {/* Log Item 1 */}
                 <div className="flex gap-4">
                   <div className="flex flex-col items-center gap-1">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#a5fa00] mt-1.5 shadow-[0_0_8px_rgba(165,250,0,0.6)]"></div>
@@ -233,7 +246,6 @@ export const ProjectWorkspacePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Log Item 2 */}
                 <div className="flex gap-4">
                   <div className="flex flex-col items-center gap-1">
                     <div className="w-2.5 h-2.5 rounded-full border border-[#292a2a] mt-1.5 bg-[#121414]"></div>
@@ -241,32 +253,33 @@ export const ProjectWorkspacePage: React.FC = () => {
                   </div>
                   <div className="flex flex-col gap-1 pb-4">
                     <p className="font-sans text-xs text-white">
-                      <span className="font-bold">System</span> deployment initialized
+                      <span className="font-bold">System</span> tasks & team board active
                     </p>
-                    <p className="font-sans text-[11px] text-[#c0caad]">MongoDB database collections connected.</p>
-                    <span className="font-mono-tag text-[10px] text-[#8b947a] mt-1">2 hours ago</span>
+                    <p className="font-sans text-[11px] text-[#c0caad]">Kanban board & members loaded.</p>
+                    <span className="font-mono-tag text-[10px] text-[#8b947a] mt-1">Just now</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Chart / Performance Metrics Panel (Spans 12 columns) */}
+            {/* Performance Metrics Panel */}
             <div className="md:col-span-12 elevation-1 rounded-xl p-8 mt-4 flex flex-col md:flex-row gap-8 items-center border-l-4 border-l-[#a5fa00]">
               <div className="flex-1">
                 <h3 className="font-display text-2xl font-bold text-white mb-2">Performance Metrics</h3>
                 <p className="font-sans text-sm text-[#c0caad] mb-6 max-w-xl">
-                  Sprint velocity and completion rate metrics for "{currentProject.title}". Progress is updated dynamically upon task completion.
+                  Sprint velocity and completion rate metrics for "{currentProject.title}". Progress is updated dynamically upon task completion ({currentProject.completedTasks}/{currentProject.taskCount} tasks completed).
                 </p>
-                <button className="btn-secondary text-xs">View Detailed Workspace Report</button>
+                <button onClick={() => setActiveTab('tasks')} className="btn-secondary text-xs">
+                  Go to Kanban Board
+                </button>
               </div>
 
-              {/* Decorative Abstract Data Bar Chart */}
               <div className="w-full md:w-1/2 h-44 bg-[#1f2020] rounded-lg border border-[#292a2a] relative overflow-hidden flex items-end px-4 gap-3 pt-8">
                 <div className="w-full bg-[#292a2a] rounded-t-sm h-[30%] hover:bg-[#a5fa00]/20 transition-colors"></div>
                 <div className="w-full bg-[#292a2a] rounded-t-sm h-[45%] hover:bg-[#a5fa00]/20 transition-colors"></div>
                 <div className="w-full bg-[#292a2a] rounded-t-sm h-[20%] hover:bg-[#a5fa00]/20 transition-colors"></div>
                 <div className="w-full bg-[#292a2a] rounded-t-sm h-[60%] hover:bg-[#a5fa00]/20 transition-colors"></div>
-                <div className="w-full bg-[#a5fa00] rounded-t-sm h-[85%] relative shadow-[0_0_15px_rgba(165,250,0,0.3)]">
+                <div className="w-full bg-[#a5fa00] rounded-t-sm relative shadow-[0_0_15px_rgba(165,250,0,0.3)] transition-all" style={{ height: `${Math.max(15, currentProject.progress)}%` }}>
                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 font-mono-tag text-[10px] text-[#a5fa00]">
                     {currentProject.progress}%
                   </div>
@@ -278,22 +291,25 @@ export const ProjectWorkspacePage: React.FC = () => {
         )}
 
         {activeTab === 'tasks' && (
-          <div className="col-span-12 elevation-1 p-12 text-center flex flex-col items-center">
-            <CheckSquare className="w-12 h-12 text-[#a5fa00] mb-4" />
-            <h3 className="font-display font-bold text-xl text-white">Task Management & Kanban Board</h3>
-            <p className="text-sm text-[#c0caad] mt-2 max-w-md">
-              Milestone 3 will introduce full task tracking, priority filters, and Kanban board columns.
-            </p>
+          <div className="col-span-12">
+            <KanbanBoard
+              projectId={currentProject.id}
+              tasks={tasks}
+              members={members}
+              isLeaderOrAdmin={isLeaderOrAdmin}
+              onTasksUpdated={() => loadAllProjectData(currentProject.id)}
+            />
           </div>
         )}
 
         {activeTab === 'members' && (
-          <div className="col-span-12 elevation-1 p-12 text-center flex flex-col items-center">
-            <Users className="w-12 h-12 text-[#a5fa00] mb-4" />
-            <h3 className="font-display font-bold text-xl text-white">Project Team & Member Roles</h3>
-            <p className="text-sm text-[#c0caad] mt-2 max-w-md">
-              Milestone 3 will enable adding team members and managing project permissions.
-            </p>
+          <div className="col-span-12">
+            <MemberList
+              projectId={currentProject.id}
+              members={members}
+              isLeaderOrAdmin={isLeaderOrAdmin}
+              onMembersUpdated={() => loadAllProjectData(currentProject.id)}
+            />
           </div>
         )}
 

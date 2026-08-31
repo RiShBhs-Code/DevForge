@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useProjectStore } from '../stores/projectStore';
+import { useTaskStore } from '../stores/taskStore';
 import { CreateProjectModal } from '../components/projects/CreateProjectModal';
 import { EditProjectModal } from '../components/projects/EditProjectModal';
 import { Project } from '../types';
@@ -16,28 +17,31 @@ import {
   FolderGit2,
   Calendar,
   Users,
+  CheckSquare,
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuthStore();
-  const { projects, fetchProjects, isLoading } = useProjectStore();
+  const { projects, fetchProjects } = useProjectStore();
+  const { myTasks, fetchMyTasks } = useTaskStore();
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [taskFilter, setTaskFilter] = useState<'all' | 'pending' | 'review'>('all');
+  const [taskFilter, setTaskFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+    fetchMyTasks();
+  }, [fetchProjects, fetchMyTasks]);
 
   const activeProjects = projects.filter((p) => p.status === 'ACTIVE');
   const totalTasks = projects.reduce((sum, p) => sum + p.taskCount, 0);
 
-  const isLeaderOrAdmin = (proj: Project) => {
-    if (!user) return false;
-    if (user.role === 'ADMIN') return true;
-    return proj.leaderId === user.id;
-  };
+  const filteredAssignedTasks = myTasks.filter((task) => {
+    if (taskFilter === 'pending') return task.status !== 'COMPLETED';
+    if (taskFilter === 'completed') return task.status === 'COMPLETED';
+    return true;
+  });
 
   return (
     <div className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-16 py-8 md:py-12">
@@ -50,7 +54,7 @@ export const DashboardPage: React.FC = () => {
           <p className="font-sans text-base md:text-lg text-[#c0caad] mt-3 max-w-2xl">
             Good morning, <span className="text-white font-semibold">{user?.name}</span>. You have{' '}
             <span className="text-[#a5fa00] font-bold">{activeProjects.length} active projects</span> and{' '}
-            <span className="text-white font-bold">{totalTasks} tasks</span> requiring attention this week.
+            <span className="text-white font-bold">{myTasks.length} assigned tasks</span> requiring attention.
           </p>
         </div>
 
@@ -173,38 +177,30 @@ export const DashboardPage: React.FC = () => {
           {/* Weekly Progress Bar Chart */}
           <div className="card-level-1 p-6">
             <h2 className="font-mono-tag text-xs text-[#8b947a] uppercase tracking-wider mb-6">
-              Weekly Progress
+              Assigned Task Health
             </h2>
             <div className="flex items-end gap-3 h-32 mb-4 border-b border-[#292a2a] pb-4">
               <div className="w-full bg-[#292a2a] rounded h-[40%] hover:bg-[#a5fa00] transition-colors cursor-pointer relative group">
                 <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121414] border border-[#292a2a] px-1.5 py-0.5 rounded font-mono-tag text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                  Mon
+                  TODO
                 </div>
               </div>
-              <div className="w-full bg-[#292a2a] rounded h-[70%] hover:bg-[#a5fa00] transition-colors cursor-pointer relative group">
-                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121414] border border-[#292a2a] px-1.5 py-0.5 rounded font-mono-tag text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                  Tue
-                </div>
-              </div>
-              <div className="w-full bg-[#a5fa00] rounded h-[90%] shadow-[0_0_15px_rgba(165,250,0,0.3)] cursor-pointer relative group">
+              <div className="w-full bg-[#a5fa00] rounded h-[85%] shadow-[0_0_15px_rgba(165,250,0,0.3)] cursor-pointer relative group">
                 <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121414] border border-[#a5fa00] px-1.5 py-0.5 rounded font-mono-tag text-[10px] text-[#a5fa00] font-bold z-10">
-                  Wed
+                  Active
                 </div>
               </div>
-              <div className="w-full bg-[#292a2a] rounded h-[30%] hover:bg-[#a5fa00] transition-colors cursor-pointer relative group">
+              <div className="w-full bg-[#292a2a] rounded h-[60%] hover:bg-[#a5fa00] transition-colors cursor-pointer relative group">
                 <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121414] border border-[#292a2a] px-1.5 py-0.5 rounded font-mono-tag text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                  Thu
-                </div>
-              </div>
-              <div className="w-full bg-[#292a2a] rounded h-[55%] hover:bg-[#a5fa00] transition-colors cursor-pointer relative group">
-                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#121414] border border-[#292a2a] px-1.5 py-0.5 rounded font-mono-tag text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                  Fri
+                  Done
                 </div>
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <span className="font-display font-bold text-xl text-white">{totalTasks} Tasks</span>
-              <span className="font-mono-tag text-xs text-[#a5fa00]">+12% vs last week</span>
+              <span className="font-display font-bold text-xl text-white">{myTasks.length} Assigned Tasks</span>
+              <Link to="/tasks" className="font-mono-tag text-xs text-[#a5fa00] hover:underline">
+                Manage Tasks
+              </Link>
             </div>
           </div>
 
@@ -214,38 +210,23 @@ export const DashboardPage: React.FC = () => {
               Recent Activity
             </h2>
             <div className="space-y-6 relative before:absolute before:inset-y-0 before:left-[15px] before:w-px before:bg-[#292a2a]">
-              {/* Activity Item 1 */}
-              <div className="relative flex gap-4 pl-8 group cursor-pointer">
-                <div className="absolute left-0 top-0.5 w-8 h-8 rounded-full bg-[#121414] border border-[#292a2a] flex items-center justify-center z-10 group-hover:border-[#a5fa00] transition-colors">
-                  <GitCommit className="w-4 h-4 text-[#8b947a] group-hover:text-[#a5fa00]" />
-                </div>
-                <div>
-                  <p className="font-sans text-sm text-white">
-                    Merged PR #1042 into <span className="font-mono-tag text-[#a5fa00] bg-[#1f2020] px-1.5 py-0.5 rounded text-[11px]">main</span>
-                  </p>
-                  <p className="font-mono-tag text-[11px] text-[#8b947a] mt-1">2 hours ago</p>
-                </div>
-              </div>
-
-              {/* Activity Item 2 */}
               <div className="relative flex gap-4 pl-8 group cursor-pointer">
                 <div className="absolute left-0 top-0.5 w-8 h-8 rounded-full bg-[#121414] border border-[#292a2a] flex items-center justify-center z-10 group-hover:border-[#a5fa00] transition-colors">
                   <CheckCircle className="w-4 h-4 text-[#8b947a] group-hover:text-[#a5fa00]" />
                 </div>
                 <div>
-                  <p className="font-sans text-sm text-white">Completed Milestone 1 foundation setup</p>
-                  <p className="font-mono-tag text-[11px] text-[#8b947a] mt-1">4 hours ago by {user?.name}</p>
+                  <p className="font-sans text-sm text-white">Milestone 3 Tasks & Team loaded</p>
+                  <p className="font-mono-tag text-[11px] text-[#8b947a] mt-1">Just now</p>
                 </div>
               </div>
 
-              {/* Activity Item 3 */}
               <div className="relative flex gap-4 pl-8 group cursor-pointer">
                 <div className="absolute left-0 top-0.5 w-8 h-8 rounded-full bg-[#121414] border border-[#292a2a] flex items-center justify-center z-10 group-hover:border-[#a5fa00] transition-colors">
-                  <AlertTriangle className="w-4 h-4 text-[#8b947a] group-hover:text-[#a5fa00]" />
+                  <GitCommit className="w-4 h-4 text-[#8b947a] group-hover:text-[#a5fa00]" />
                 </div>
                 <div>
-                  <p className="font-sans text-sm text-white">System authentication session active</p>
-                  <p className="font-mono-tag text-[11px] text-[#8b947a] mt-1">Today by System</p>
+                  <p className="font-sans text-sm text-white">Kanban task board integrated</p>
+                  <p className="font-mono-tag text-[11px] text-[#8b947a] mt-1">Today</p>
                 </div>
               </div>
             </div>
@@ -256,7 +237,12 @@ export const DashboardPage: React.FC = () => {
       {/* Assigned Tasks (List View Section - Spans 12 cols) */}
       <section className="mt-16">
         <div className="flex items-center justify-between mb-8 border-b border-[#292a2a] pb-4">
-          <h2 className="font-display text-2xl font-bold text-white">Assigned Tasks</h2>
+          <h2 className="font-display text-2xl font-bold text-white flex items-center gap-2">
+            <span>Assigned Tasks</span>
+            <span className="px-2 py-0.5 bg-[#a5fa00]/10 border border-[#a5fa00]/40 rounded font-mono-tag text-xs text-[#a5fa00]">
+              {myTasks.length} Total
+            </span>
+          </h2>
           <div className="flex gap-4">
             <button
               onClick={() => setTaskFilter('all')}
@@ -279,70 +265,51 @@ export const DashboardPage: React.FC = () => {
               Pending
             </button>
             <button
-              onClick={() => setTaskFilter('review')}
+              onClick={() => setTaskFilter('completed')}
               className={`font-mono-tag text-xs pb-1 transition-colors ${
-                taskFilter === 'review'
+                taskFilter === 'completed'
                   ? 'text-white border-b-2 border-[#a5fa00]'
                   : 'text-[#8b947a] hover:text-white'
               }`}
             >
-              Review
+              Completed
             </button>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {/* Task Row 1 */}
-          <div className="bg-[#1b1c1c] hover:bg-[#1f2020] border border-transparent hover:border-[#292a2a] rounded p-4 flex items-center justify-between transition-all group cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="w-5 h-5 rounded border border-[#292a2a] group-hover:border-[#a5fa00] flex items-center justify-center transition-colors"></div>
-              <span className="font-mono-tag text-xs text-[#8b947a] uppercase w-24">DEV-402</span>
-              <span className="font-sans text-sm font-medium text-white group-hover:text-[#a5fa00] transition-colors">
-                Implement OAuth2 & JWT Authentication Flow
-              </span>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="status-badge-active">
-                <span className="status-dot-active"></span> IN PROGRESS
+        {filteredAssignedTasks.length > 0 ? (
+          <div className="flex flex-col gap-3">
+            {filteredAssignedTasks.map((task) => (
+              <div
+                key={task.id}
+                className="bg-[#1b1c1c] hover:bg-[#1f2020] border border-transparent hover:border-[#292a2a] rounded-lg p-4 flex items-center justify-between transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <CheckSquare className="w-5 h-5 text-[#a5fa00]" />
+                  <span className="font-mono-tag text-xs text-[#8b947a] uppercase w-24">
+                    ID: {task.id.slice(-6)}
+                  </span>
+                  <span className="font-sans text-sm font-medium text-white group-hover:text-[#a5fa00] transition-colors">
+                    {task.title}
+                  </span>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className={task.status === 'COMPLETED' ? 'status-badge-neutral' : 'status-badge-active'}>
+                    <span className={task.status === 'COMPLETED' ? 'status-dot-neutral' : 'status-dot-active'}></span>
+                    <span>{task.status}</span>
+                  </div>
+                  <span className="font-mono-tag text-xs text-[#8b947a] w-24 text-right">
+                    {task.priority} Priority
+                  </span>
+                </div>
               </div>
-              <span className="font-mono-tag text-xs text-[#8b947a] w-24 text-right">High Priority</span>
-            </div>
+            ))}
           </div>
-
-          {/* Task Row 2 */}
-          <div className="bg-[#1b1c1c] hover:bg-[#1f2020] border border-transparent hover:border-[#292a2a] rounded p-4 flex items-center justify-between transition-all group cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="w-5 h-5 rounded border border-[#292a2a] group-hover:border-[#a5fa00] flex items-center justify-center transition-colors"></div>
-              <span className="font-mono-tag text-xs text-[#8b947a] uppercase w-24">UI-118</span>
-              <span className="font-sans text-sm font-medium text-white group-hover:text-[#a5fa00] transition-colors">
-                Update Dashboard Metrics & Bento Layout
-              </span>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="status-badge-neutral">
-                <span className="status-dot-neutral"></span> PENDING
-              </div>
-              <span className="font-mono-tag text-xs text-[#8b947a] w-24 text-right">Med Priority</span>
-            </div>
+        ) : (
+          <div className="p-8 card-level-1 text-center text-xs text-[#8b947a]">
+            No tasks found matching filter.
           </div>
-
-          {/* Task Row 3 */}
-          <div className="bg-[#1b1c1c] hover:bg-[#1f2020] border border-transparent hover:border-[#292a2a] rounded p-4 flex items-center justify-between transition-all group cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="w-5 h-5 rounded border border-[#292a2a] group-hover:border-[#a5fa00] flex items-center justify-center transition-colors"></div>
-              <span className="font-mono-tag text-xs text-[#8b947a] uppercase w-24">SYS-092</span>
-              <span className="font-sans text-sm font-medium text-white group-hover:text-[#a5fa00] transition-colors">
-                Migrate Database Cluster to MongoDB Atlas
-              </span>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="status-badge-active">
-                <span className="status-dot-active"></span> COMPLETED
-              </div>
-              <span className="font-mono-tag text-xs text-[#8b947a] w-24 text-right">Low Priority</span>
-            </div>
-          </div>
-        </div>
+        )}
       </section>
 
       {/* Modals */}

@@ -10,8 +10,10 @@ import (
 	"devforge/backend/config"
 	"devforge/backend/internal/auth"
 	"devforge/backend/internal/database"
+	"devforge/backend/internal/members"
 	"devforge/backend/internal/middleware"
 	"devforge/backend/internal/projects"
+	"devforge/backend/internal/tasks"
 
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
@@ -46,6 +48,8 @@ func main() {
 
 	authHandler := auth.NewHandler(db.Database, cfg.JWTSecret)
 	projectHandler := projects.NewHandler(db.Database)
+	taskHandler := tasks.NewHandler(db.Database)
+	memberHandler := members.NewHandler(db.Database)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -77,6 +81,23 @@ func main() {
 			r.Get("/{id}", projectHandler.GetProject)
 			r.Put("/{id}", projectHandler.UpdateProject)
 			r.Delete("/{id}", projectHandler.DeleteProject)
+
+			// Tasks sub-routes
+			r.Get("/{id}/tasks", taskHandler.GetProjectTasks)
+			r.Post("/{id}/tasks", taskHandler.CreateTask)
+
+			// Members sub-routes
+			r.Get("/{id}/members", memberHandler.GetProjectMembers)
+			r.Post("/{id}/members", memberHandler.AddProjectMember)
+			r.Delete("/{id}/members/{userId}", memberHandler.RemoveProjectMember)
+		})
+
+		// Protected task routes
+		r.Route("/tasks", func(r chi.Router) {
+			r.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+			r.Get("/my", taskHandler.GetMyTasks)
+			r.Put("/{id}", taskHandler.UpdateTask)
+			r.Delete("/{id}", taskHandler.DeleteTask)
 		})
 	})
 
